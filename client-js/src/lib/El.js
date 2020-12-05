@@ -53,11 +53,12 @@ export default class El {
     return this;
   }
 
-  // Set the href on an element
-  href(href) {
-    // We first do a check to make sure wether or not we should set the href
-    // of an element, because we don't want to set the href if we pass an empty string
-    if (href) this.el.setAttribute("href", href);
+  // Sets the disabled attribute of an element to false or true
+  disabled(boolean) {
+    if (boolean === true) {
+      this.el.disabled = true;
+    } else this.el.disabled = false;
+
     return this;
   }
 
