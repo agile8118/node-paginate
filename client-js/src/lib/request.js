@@ -31,15 +31,25 @@ class Request {
    */
   get(url) {
     return new Promise((resolve, reject) => {
-      try {
-        const xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", url, false); // false means to send the request synchronously
-        xmlHttp.send(null);
-
-        resolve(JSON.parse(xmlHttp.responseText));
-      } catch (e) {
-        reject(e);
-      }
+      const req = new XMLHttpRequest();
+      req.open("GET", url);
+      req.onload = function () {
+        if (this.status >= 200 && this.status < 300) {
+          resolve(JSON.parse(req.response));
+        } else {
+          reject({
+            status: this.status,
+            statusText: req.statusText,
+          });
+        }
+      };
+      req.onerror = function () {
+        reject({
+          status: this.status,
+          statusText: req.statusText,
+        });
+      };
+      req.send();
     });
   }
 }

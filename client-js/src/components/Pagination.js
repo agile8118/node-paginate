@@ -25,7 +25,11 @@ import request from "../lib/request.js";
 class Pagination {
   constructor(data) {
     // Our pagination data
-    this.data = data;
+    this.totalPages = data.totalPages;
+    this.currentPage = data.currentPage;
+    this.totalResults = data.totalResults;
+    this.showingFrom = data.showingFrom;
+    this.showingUntil = data.showingUntil;
   }
 
   // Sends a request to server to grab the new pagination and articles
@@ -49,21 +53,21 @@ class Pagination {
   // This will populate and return our pagination pages
   renderPaginationPages() {
     const div = new El("div").className("pagination__pages").build();
-    for (let i = 1; i <= this.data.totalPages; i++) {
+    for (let i = 1; i <= this.totalPages; i++) {
       div.appendChild(
         new El("button")
           .className(
             `pagination__page ${
-              this.data.currentPage === i ? "pagination__page--selected" : ""
+              this.currentPage === i ? "pagination__page--selected" : ""
             }`
           )
           .text(i)
-          .disabled(this.data.currentPage === i)
+          .disabled(this.currentPage === i)
           .onClick(async (e) => {
             e.preventDefault();
             // We don't want anything to happen when we click on the page button
             // that represents the page number that we are currently on
-            if (this.data.currentPage === i) return;
+            if (this.currentPage === i) return;
             this.fetchAndRender(i);
           })
           .build()
@@ -77,14 +81,14 @@ class Pagination {
     const paginationPrev = new El("button")
       .className(
         `pagination__prev ${
-          this.data.currentPage === 1 ? "pagination__button--disabled" : ""
+          this.currentPage === 1 ? "pagination__button--disabled" : ""
         }`
       )
-      .disabled(this.data.currentPage === 1)
+      .disabled(this.currentPage === 1)
       .onClick(async (e) => {
         e.preventDefault();
-        if (this.data.currentPage === 1) return;
-        this.fetchAndRender(this.data.currentPage - 1);
+        if (this.currentPage === 1) return;
+        this.fetchAndRender(this.currentPage - 1);
       })
       .append(new El("img").src("./prev-icon.svg").build())
       .build();
@@ -93,27 +97,29 @@ class Pagination {
     const paginationNext = new El("button")
       .className(
         `pagination__next ${
-          this.data.totalPages === this.data.currentPage
+          this.totalPages === this.currentPage
             ? "pagination__button--disabled"
             : ""
         }`
       )
-      .disabled(this.data.totalPages === this.data.currentPage)
+      .disabled(this.totalPages === this.currentPage)
       .onClick(async (e) => {
         e.preventDefault();
-        if (this.data.totalPages === this.data.currentPage) return;
-        this.fetchAndRender(this.data.currentPage + 1);
+        if (this.totalPages === this.currentPage) return;
+        this.fetchAndRender(this.currentPage + 1);
       })
       .append(new El("img").src("./next-icon.svg").build())
       .build();
 
     // The pagination info text
-    const paginationInfo = new El("span")
-      .className("pagination__info")
-      .text(
-        `${this.data.showingFrom} - ${this.data.showingUntil} of ${this.data.totalResults} articles`
-      )
-      .build();
+    const paginationInfo = this.totalResults
+      ? new El("span")
+          .className("pagination__info")
+          .text(
+            `${this.showingFrom} - ${this.showingUntil} of ${this.totalResults} articles`
+          )
+          .build()
+      : null;
 
     // All pagination buttons
     const paginationButtons = new El("div")

@@ -71,7 +71,7 @@ export default class El {
   // Append a DOM element to the element. We might call this function multiple times
   // to append different elements to the element.
   append(element) {
-    this.el.appendChild(element);
+    if (element) this.el.appendChild(element);
     return this;
   }
 
