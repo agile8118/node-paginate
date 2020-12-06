@@ -2,7 +2,7 @@
   const express = require("express");
   const path = require("path");
   const bodyParser = require("body-parser");
-  const readline = require("readline");
+  const readline = require("readline"); // will be used to get input from the command line
 
   const app = express();
   const publicPath = path.join(__dirname, "../public");
@@ -12,10 +12,11 @@
   app.use(bodyParser.json()).use(bodyParser.urlencoded({ extended: true }));
 
   const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
+    input: process.stdin, // Standard input
+    output: process.stdout, // Standard output
   });
 
+  // Ask in the command line for the database type if not specified
   if (!process.env.DATABASE) {
     process.env.DATABASE = await ((question) => {
       return new Promise((resolve, reject) => {
@@ -25,9 +26,12 @@
       });
     })("What database you want to use? [mysql, mongodb, none] \n");
 
+    // Close the read line once we are done, if we don't do it then
+    // we have to run ctrl + c twice in order to shutdown the server
     rl.close();
   }
 
+  // This file will handle all the database related stuff
   require("./database");
 
   // Show the home page

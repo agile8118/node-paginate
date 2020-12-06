@@ -7,8 +7,9 @@ const readline = require("readline");
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
+const Article = require("./mongodb/models/article");
+const mysql = require("mysql");
 const axios = require("axios");
-const Article = require("./models/article");
 const keys = require("../config/keys");
 
 const rl = readline.createInterface({
@@ -16,6 +17,8 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+// It will ask a question in the terminal.
+// it returns a promise which will contain the answer
 function ask(question) {
   return new Promise((resolve, reject) => {
     rl.question(question, (input) => {
@@ -24,25 +27,29 @@ function ask(question) {
   });
 }
 
-function random(obj) {
-  const number = Math.floor(Math.random() * 10);
-  return obj[number];
+// Will return an item of an array randomly
+function random(arr) {
+  const number = Math.floor(Math.random() * 10); // a number from 0 to 9
+  return arr[number];
 }
 
 (async () => {
   console.log("Grabbing the seed data from the internet...");
 
+  // Grab the user data
   const usersRes = await axios.get(
     "https://jsonplaceholder.typicode.com/users"
   );
 
+  // Grab the posts data -
   const postsRes = await axios.get(
     "https://jsonplaceholder.typicode.com/posts"
   );
 
-  const users = usersRes.data;
-  const posts = postsRes.data;
+  const users = usersRes.data; // An array that contains 10 users
+  const posts = postsRes.data; // An array that contains 100 posts
 
+  // Populate a formatted data object that we'll need
   const data = posts.map((post) => {
     return {
       title: post.title,
@@ -51,6 +58,7 @@ function random(obj) {
       image: `https://picsum.photos/192/120?random=${Math.floor(
         Math.random() * 10
       )}`,
+      // A random date
       date: new Date(new Date() - Math.floor(Math.random() * 10000000000)),
     };
   });
@@ -59,11 +67,16 @@ function random(obj) {
     "What database you want to use? [mysql, mongodb, none] \n"
   );
 
+  let dropOrNot;
+  // Set up the database now...
   switch (chosenDB) {
+    // In case we don't want to use any database
     case "none":
       console.log(
         "No database will be used. Data will be saved in /server/database/data.json file."
       );
+
+      // This will override the file every single time (so it will always contain 100 records)
       fs.writeFile(
         path.join(__dirname + "/data.json"),
         JSON.stringify({ articles: data }),
@@ -76,12 +89,14 @@ function random(obj) {
         }
       );
       break;
+    // In case we don't want to use MySQL
     case "mysql":
       console.log("MySQL database will be used.");
-      const mysql = require("mysql");
       let connection = mysql.createConnection(keys.mysql_url);
 
-      let dropOrNot = await ask(
+      // Drop the table first if specified (we might want to start fresh), if we don't drop,
+      // every time we run the file we'll insert 100 new records into the database
+      dropOrNot = await ask(
         "Do you want to first delete all the existing records and then add the seed data? [yes, no] \n"
       );
       if (dropOrNot !== "no") {
@@ -106,6 +121,7 @@ function random(obj) {
         }
       );
 
+      // Now insert all the data into the articles table
       let values = "";
       data.map((d) => {
         values =
@@ -129,12 +145,16 @@ function random(obj) {
       });
 
       break;
+    // In case we want to use MongoDB
     case "mongodb":
       console.log("MongoDB database will be used.");
       mongoose.connect(keys.mlab_url, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
       });
+
+      // Drop the table first if specified (we might want to start fresh), if we don't drop,
+      // every time we run the file we'll insert 100 new records into the database
       dropOrNot = await ask(
         "Do you want to first delete all the existing records and then add the seed data? [yes, no] \n"
       );
@@ -142,6 +162,8 @@ function random(obj) {
         Article.collection.drop();
         console.log("Articles collection has been removed...");
       }
+
+      // Now insert all the data into the articles collection
       try {
         await Article.insertMany(data);
         console.log(

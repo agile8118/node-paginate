@@ -1,14 +1,16 @@
 const mysql = require("mysql");
-const keys = require("../config/keys");
+const keys = require("../../config/keys");
 
+// Create the MySQL connection
 let connection = mysql.createConnection(keys.mysql_url);
 
+// Show a message if connected to the database
 connection.connect((e) => {
   if (e) throw e;
   console.log("Successfully connected to the MySQL database.");
 });
 
-// Create articles table
+// Create the articles table
 connection.query(
   `CREATE TABLE IF NOT EXISTS articles (
       id INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -35,6 +37,7 @@ module.exports = (DB) => {
     });
   };
 
+  // Find the documents we need
   DB.find = (table, queryObj, options) => {
     return new Promise((resolve, reject) => {
       let query = `SELECT * FROM ${table} ORDER BY ${

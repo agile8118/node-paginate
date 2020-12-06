@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const Article = require("./models/article");
-const keys = require("../config/keys");
+const keys = require("../../config/keys");
 
+// Connect to the MongoDB database
 mongoose.connect(
   keys.mlab_url,
   {
@@ -13,7 +14,6 @@ mongoose.connect(
     console.log("Successfully connected to the MongoDB database.");
   }
 );
-
 mongoose.Promise = global.Promise;
 
 module.exports = (DB) => {
@@ -33,9 +33,11 @@ module.exports = (DB) => {
     });
   };
 
+  // Find the documents we need
   DB.find = (collection, query, options) => {
     return new Promise((resolve, reject) => {
       switch (collection) {
+        // Right now we only have one collection - articles
         case "articles":
           Article.find(query, null, options, (err, results) => {
             if (err) reject(err);
