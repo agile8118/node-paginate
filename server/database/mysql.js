@@ -18,7 +18,7 @@ connection.query(
       author VARCHAR(200) NOT NULL,
       date TIMESTAMP DEFAULT NOW() NOT NULL
    );`,
-  (e, result) => {
+  (e) => {
     if (e) throw e;
   }
 );
@@ -29,10 +29,21 @@ module.exports = (DB) => {
     return new Promise((resolve, reject) => {
       let query = `SELECT COUNT(*) AS count FROM ${table}`;
       connection.query(query, (e, result) => {
-        if (e) {
-          reject(e);
-        }
+        if (e) reject(e);
         resolve(result[0].count);
+      });
+    });
+  };
+
+  DB.find = (table, queryObj, options) => {
+    return new Promise((resolve, reject) => {
+      let query = `SELECT * FROM ${table} ORDER BY ${
+        Object.keys(options.sort)[0]
+      } LIMIT ${options.skip}, ${options.limit}`;
+
+      connection.query(query, (e, results) => {
+        if (e) reject(e);
+        resolve(results);
       });
     });
   };

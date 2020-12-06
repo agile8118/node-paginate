@@ -32,4 +32,19 @@ module.exports = (DB) => {
       }
     });
   };
+
+  DB.find = (collection, query, options) => {
+    return new Promise((resolve, reject) => {
+      switch (collection) {
+        case "articles":
+          Article.find(query, null, options, (err, results) => {
+            if (err) reject(err);
+            resolve(results);
+          });
+          break;
+        default:
+          reject(`No collection with the name '${collection}' exists.`);
+      }
+    });
+  };
 };

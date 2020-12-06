@@ -1,14 +1,12 @@
-const Article = require("../database/models/article");
 const { DB } = require("../database");
 
 module.exports = (app) => {
   app.get("/api/articles", async (req, res) => {
     const page = parseInt(req.query.page);
     const perPage = 12;
-    // const totalArticlesLen = await Article.countDocuments().exec();
     const totalArticlesLen = await DB.countDocuments("articles");
-    console.log(totalArticlesLen);
-    /* let totalPages;
+
+    let totalPages;
     if (totalArticlesLen % perPage > 0) {
       totalPages = Math.floor(totalArticlesLen / perPage) + 1;
     } else {
@@ -22,15 +20,15 @@ module.exports = (app) => {
       showingUntil = perPage * page;
     }
 
-    //  const articles = await Article.find({})
-    //       .limit(perPage)
-    //       .skip(perPage * (page - 1))
-    //       .sort({ date: -1 });
-
-    const articles = await DB.find("articles")
-      .limit(perPage)
-      .skip(perPage * (page - 1))
-      .sort({ date: -1 });
+    const articles = await DB.find(
+      "articles",
+      {},
+      {
+        limit: perPage,
+        skip: perPage * (page - 1),
+        sort: { date: -1 },
+      }
+    );
 
     res.send({
       articlesData: articles,
@@ -42,6 +40,5 @@ module.exports = (app) => {
         totalResults: totalArticlesLen,
       },
     });
-    */
   });
 };
