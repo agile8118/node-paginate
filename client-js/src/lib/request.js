@@ -26,7 +26,7 @@ class Request {
   /**
    * Sends a get request
    * @param {string} url what the request will be sent to.
-   * @returns {promise} will be resolved with the responseText property that
+   * @returns {promise} will be resolved with the response property that
    * we'll have after the xml ajax request has been successful.
    */
   get(url) {

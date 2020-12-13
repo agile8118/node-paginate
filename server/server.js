@@ -2,12 +2,14 @@
   const express = require("express");
   const path = require("path");
   const bodyParser = require("body-parser");
+  const cors = require("cors");
   const readline = require("readline"); // will be used to get input from the command line
 
   const app = express();
   const publicPath = path.join(__dirname, "../public");
   const port = process.env.PORT || 4080;
 
+  app.use(cors());
   app.use(express.static(publicPath));
   app.use(bodyParser.json()).use(bodyParser.urlencoded({ extended: true }));
 
@@ -50,7 +52,8 @@
   app.listen(port, () => {
     console.log(
       "----------------------------------\n" +
-        "Server has started on port " +
+        "Server has successfully started." +
+        "\nYou can now open the app in the browser: http://localhost:" +
         port +
         "\n----------------------------------"
     );

@@ -27,10 +27,11 @@ module.exports = (DB) => {
         });
 
         // Skip and limit
-        parsedData = parsedData.slice(
-          options.skip,
-          options.skip + options.limit
-        );
+        if (options)
+          parsedData = parsedData.slice(
+            options.skip,
+            options.skip + options.limit
+          );
 
         resolve(parsedData);
       });

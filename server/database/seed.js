@@ -73,7 +73,7 @@ function random(arr) {
     // In case we don't want to use any database
     case "none":
       console.log(
-        "No database will be used. Data will be saved in /server/database/data.json file."
+        "No database will be used. Data will be saved in /server/database/data.json file..."
       );
 
       // This will override the file every single time (so it will always contain 100 records)
@@ -82,7 +82,7 @@ function random(arr) {
         JSON.stringify({ articles: data }),
         () => {
           console.log(
-            data.length + " records has been saved to the data.json file..."
+            data.length + " records has been saved to the data.json file."
           );
           rl.close();
           process.exit(0);

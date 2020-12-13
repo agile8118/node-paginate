@@ -1,7 +1,8 @@
 /**
  * This is the Articles component, when we initialize and call the render
- * function on it, it will put this html into the DOM :
+ * function on it, it will put this html into the DOM:
  *
+ * <div>
  *  <div class="article">
  *   <div class="article__image"><img src="https://picsum.photos/192/120?random=1"></div>
  *   <div class="article__content">
@@ -10,7 +11,13 @@
  *     <div class="article__body">Some text here and more and more and more...</div>
  *   </div>
  *  </div>
- *
+ *  <div class="article">...</div>
+ *  <div class="article">...</div>
+ *  .
+ *  .
+ *  .
+ *  <div class="article">...</div>
+ * </div>
  */
 
 import Article from "./Article.js";

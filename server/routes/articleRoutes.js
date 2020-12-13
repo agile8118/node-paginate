@@ -35,7 +35,7 @@ module.exports = (app) => {
       paginationData: {
         totalPages,
         currentPage: page,
-        showingFrom: perPage * page - perPage + 1,
+        showingFrom: perPage * (page - 1) + 1,
         showingUntil,
         totalResults: totalArticlesLen,
       },

@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "add": "npm install && cd client-js && npm install && cd ..",
     "dev:node": "DATABASE=mongodb nodemon server/server.js --ignore ./public",
-    "dev:client-js": "cd ./client-js && npm run dev",
+    "dev:client-js": "cd ./client-js && npm run start",
     "dev": "concurrently \"npm run dev:node\" \"npm run dev:client-js\"",
+    "seed": "node server/database/seed.js",
     "start": "node server/server.js"
   },
   "author": "",
@@ -14,6 +16,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.10.17",
     "mysql": "^2.18.1"

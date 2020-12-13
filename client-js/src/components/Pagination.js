@@ -112,14 +112,12 @@ class Pagination {
       .build();
 
     // The pagination info text
-    const paginationInfo = this.totalResults
-      ? new El("span")
-          .className("pagination__info")
-          .text(
-            `${this.showingFrom} - ${this.showingUntil} of ${this.totalResults} articles`
-          )
-          .build()
-      : null;
+    const paginationInfo = new El("span")
+      .className("pagination__info")
+      .text(
+        `${this.showingFrom} - ${this.showingUntil} of ${this.totalResults} articles`
+      )
+      .build();
 
     // All pagination buttons
     const paginationButtons = new El("div")

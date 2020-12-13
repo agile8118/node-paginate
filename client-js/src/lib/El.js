@@ -62,7 +62,7 @@ export default class El {
     return this;
   }
 
-  // Adds an onclick event listener on an element
+  // Adds an onclick event listener to an element
   onClick(func) {
     this.el.addEventListener("click", func);
     return this;
