@@ -6,18 +6,13 @@ class App {
   constructor() {
     // Our articles data
     this.articles = null;
-    // Our pagination data
-    this.pagination = null;
   }
 
   // Fetch the articles from the server
   async fetch(cb) {
-    const { articlesData, paginationData } = await request.get(
-      "/api/articles?page=1"
-    );
+    const { articlesData } = await request.get("/api/articles?page=1");
 
     this.articles = articlesData;
-    this.pagination = paginationData;
 
     cb();
   }
@@ -37,7 +32,6 @@ class App {
        * make our job easier and actually doing that is way easier than what you might think!
        */
       new Articles(this.articles).render();
-      new Pagination(this.pagination).render();
     });
   }
 }
