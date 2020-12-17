@@ -54,6 +54,6 @@ database name in the package.json file for the npm run dev:node command.
 
 This command will start both the nodejs server and the webpack in one terminal tab.
 
-This is the repository that's being used for teaching how to build a pagination system in [this](https://www.youtube.com/channel/UCEygwyqjUUMj6TOnxMsDjjQ) video.
-To view the final solution checkout to this branch: solution-final
-To view the react solution checkout to this branch: react-solution
+This is the repository that's being used for teaching how to build a pagination system in [this](https://youtu.be/vP9fOEAlo74) video.
+To view the final solution checkout to this branch: solution-final.
+To view the react solution checkout to this branch: react-solution.
