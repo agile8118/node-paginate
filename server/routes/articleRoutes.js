@@ -2,42 +2,38 @@ const { DB } = require("../database");
 
 module.exports = (app) => {
   app.get("/api/articles", async (req, res) => {
-    const page = parseInt(req.query.page);
     const perPage = 12;
+    const page = parseInt(req.query.page);
     const totalArticlesLen = await DB.countDocuments("articles");
-
-    let totalPages;
-    if (totalArticlesLen % perPage > 0) {
-      totalPages = Math.floor(totalArticlesLen / perPage) + 1;
-    } else {
-      totalPages = Math.floor(totalArticlesLen / perPage);
-    }
-
-    let showingUntil;
-    if (perPage * page > totalArticlesLen) {
-      showingUntil = totalArticlesLen;
-    } else {
-      showingUntil = perPage * page;
-    }
+    const totalPages = Math.ceil(totalArticlesLen / perPage);
 
     const articles = await DB.find(
       "articles",
       {},
-      {
-        limit: perPage,
-        skip: perPage * (page - 1),
-        sort: { date: -1 },
-      }
+      { sort: { date: true }, skip: perPage * (page - 1), limit: perPage }
     );
+
+    let fromPage, untilPage;
+
+    fromPage = page === 1 ? 1 : page - 1;
+    untilPage = fromPage + 5;
+
+    if (untilPage > totalPages) {
+      untilPage = totalPages;
+      fromPage = untilPage - 5;
+    }
 
     res.send({
       articlesData: articles,
       paginationData: {
         totalPages,
+        fromPage,
+        untilPage,
         currentPage: page,
-        showingFrom: perPage * (page - 1) + 1,
-        showingUntil,
         totalResults: totalArticlesLen,
+        showingFrom: perPage * (page - 1) + 1,
+        showingUntil:
+          perPage * page > totalArticlesLen ? totalArticlesLen : perPage * page,
       },
     });
   });

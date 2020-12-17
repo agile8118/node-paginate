@@ -26,6 +26,8 @@ class Pagination {
   constructor(data) {
     // Our pagination data
     this.totalPages = data.totalPages;
+    this.fromPage = data.fromPage;
+    this.untilPage = data.untilPage;
     this.currentPage = data.currentPage;
     this.totalResults = data.totalResults;
     this.showingFrom = data.showingFrom;
@@ -53,7 +55,7 @@ class Pagination {
   // This will populate and return our pagination pages
   renderPaginationPages() {
     const div = new El("div").className("pagination__pages").build();
-    for (let i = 1; i <= this.totalPages; i++) {
+    for (let i = this.fromPage; i <= this.untilPage; i++) {
       div.appendChild(
         new El("button")
           .className(

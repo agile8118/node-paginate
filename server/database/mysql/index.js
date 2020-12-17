@@ -42,7 +42,7 @@ module.exports = (DB) => {
     return new Promise((resolve, reject) => {
       let query = `SELECT * FROM ${table} ORDER BY ${
         Object.keys(options.sort)[0]
-      } LIMIT ${options.skip}, ${options.limit}`;
+      } DESC LIMIT ${options.skip}, ${options.limit}`;
 
       connection.query(query, (e, results) => {
         if (e) reject(e);
